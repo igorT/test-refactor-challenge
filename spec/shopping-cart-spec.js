@@ -11,18 +11,30 @@ describe('Shopping cart', function () {
 			browser.fill('name', 'admin').fill('password', 'admin').pressButton('#log-in').then(done);
 		});
 	});
+
 	it('creates an account', function (done) {
-		browser.visit('/util/account').then(function () {
-			browser.fill('name', 'test-user').fill('amount', 1000).pressButton('#set-up-account').
-				then(function () {
-					browser.visit('/util/account/test-user').then(function () {
-						browser.assert.success();
-						browser.assert.text('#balance', '1000');
-						browser.assert.text('#name', 'test-user');
-					}).catch(asyncFail).then(done);
-				});
-		});
+    browser.visit('/util/account').then(function () {
+			return browser.fill('name', 'test-user').fill('amount', 1000).pressButton('#set-up-account');
+    }).then(function () {
+    	return browser.visit('/util/account/test-user');
+    }).then(function () {
+        browser.assert.success();
+        browser.assert.text('#balance', '1000');
+        browser.assert.text('#name', 'test-user');
+      }).catch(asyncFail).then(done);
 	});
+  /*
+    it('creates an account', function (done) {
+      await browser.visit('/util/account');
+      await browser.fill('name', 'test-user').fill('amount', 1000).pressButton('#set-up-account');
+      await browser.visit('/util/account/test-user');
+      browser.assert.success();
+      browser.assert.text('#balance', '1000');
+      browser.assert.text('#name', 'test-user');
+      done();
+    });
+  */
+
 	it('creates an item', function (done) {
 		browser.visit('/util/item').then(function () {
 			browser.fill('name', 'blue book').fill('price', 505).fill('description', 'some desc').pressButton('#set-up-item').
